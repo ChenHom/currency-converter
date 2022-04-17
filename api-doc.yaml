@@ -1,0 +1,69 @@
+swagger: "2.0"
+info:
+  description: "匯換轉換的 API"
+  version: "1.0"
+  title: "匯率轉換試算"
+basePath: "/api"
+tags:
+- name: "converter"
+  description: "匯率轉換"
+schemes:
+- "http"
+paths:
+  /currency-converter:
+    get:
+      tags:
+      - "converter"
+      summary: ""
+      description: "取得當前幣別金額可轉換為目標幣別的金額數字"
+      - "application/json"
+      parameters:
+      - name: "from_currency"
+        in: "query"
+        description: "來源幣別"
+        required: true
+        type: "string"
+        items:
+          enum:
+          - "TWD"
+          - "JPY"
+          - "USD"
+          default: "available"
+      - name: "to_currency"
+        in: "query"
+        description: "目標幣別"
+        required: true
+        type: "string"
+        items:
+          enum:
+          - "TWD"
+          - "JPY"
+          - "USD"
+          default: "available"
+      - name: "amount"
+        in: "query"
+        description: "兌換金額, 最小值為 0"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "成功操作"
+          schema:
+            type: "object"
+            required:
+            - "data"
+            properties:
+              data:
+                type: "object"
+                properties:
+                  converted_amount:
+                    description: "金額會四捨五入到第二位，並加入千分位"
+                    type: "string"
+                    example: "3,281.00"
+        "400":
+          description: "參數的錯誤訊息"
+          schema:
+            type: "object"
+            properties:
+              errors:
+                type: "object"
